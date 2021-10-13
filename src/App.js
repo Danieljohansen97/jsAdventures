@@ -8,6 +8,8 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
+// Functionality
+import Functions from "./functions/Functions"
 
 function App() {
   const [money, setMoney] = useState(0);
@@ -39,7 +41,8 @@ function App() {
                 <Card.Body>
                   <Card.Text>Increase money per click</Card.Text>
                   <div className="d-grid gap-2">
-                    <Button variant="success">Buy</Button>
+                    <Button onClick={ () => Functions.test() } variant="success">Buy</Button>
+                    <Button onClick={ () => Functions.test2() } variant="success">Buy</Button>
                   </div>
                 </Card.Body>
               </Card>
