@@ -16,10 +16,12 @@ function App() {
   const [relateTickets, setRelateTickets] = useState(1);
   const [relateTicketsPrice, setRelateTicketsPrice] = useState(10)
   const [scripts, setScripts] = useState(0);
-  const [scriptsPrice, setScriptsPrice] = useState(1000)
+  const [scriptsPrice, setScriptsPrice] = useState(10)
 
   const [CM1ButtonEnabled, setCM1ButtonEnabled] = useState(false)
   const [CM10ButtonEnabled, setCM10ButtonEnabled] = useState(false)
+  const [scriptsButton1Enabled, setScriptsButton1Enabled] = useState(false)
+  const [scriptsButton10Enabled, setScriptsButton10Enabled] = useState(false)
 
   const handleClick = () => {
     setMoney(money + 1 * relateTickets);
@@ -45,7 +47,25 @@ function App() {
     }
   }
 
-  // 
+  // Buy Scripts
+  const handleBuyScripts = () => {
+    if (money >= scriptsPrice) {
+      setScripts(scripts + 1)
+      setMoney(money - scriptsPrice)
+      setScriptsPrice(scriptsPrice * 1.2)
+    } else {
+      alert("Not enough money :(")
+    }
+  }
+  const handleBuyScripts10 = () => {
+    if (money >= (scriptsPrice * 10)) {
+      setScripts(scripts + 10)
+      setMoney(money - (scriptsPrice * 10))
+      setScriptsPrice(scriptsPrice * 12)
+    } else {
+      alert("Not enough money :(")
+    }
+  }
 
   // useEffect that disables / enables purchase buttons
   useEffect(() => {
@@ -54,10 +74,25 @@ function App() {
     money >= relateTicketsPrice ? setCM1ButtonEnabled(false) : setCM1ButtonEnabled(true)
     // x10
     money >= (relateTicketsPrice * 10) ? setCM10ButtonEnabled(false) : setCM10ButtonEnabled(true)
-
+    // Script multiplier buttons
+    // x1
+    money >= scriptsPrice ? setScriptsButton1Enabled(false) : setScriptsButton1Enabled(true)
+    // x2
+    money >= (scriptsPrice * 10) ? setScriptsButton10Enabled(false) : setScriptsButton10Enabled(true)
 
 
   }, [money, relateTicketsPrice])
+
+  // setInterval function, this will run every second
+  useEffect(() => {
+    window.interval23 = setInterval(
+      () => setMoney(money + scripts),
+      1000
+    )
+    return () => {
+      clearInterval(window.interval23)
+    }
+  }, [])
 
   return (
     <div className="App">
@@ -94,8 +129,8 @@ function App() {
                 <Card.Body>
                   <Card.Text>Create a script to resolve incidents where the alarm autoclears</Card.Text>
                   <div className="d-grid gap-2">
-                    <Button onClick={ () => Functions.test() } variant="success">Buy x1</Button>
-                    <Button onClick={ () => Functions.test2() } variant="success">Buy x10</Button>
+                    <Button onClick={ handleBuyScripts } variant="success" disabled={ scriptsButton1Enabled }>Buy x1</Button>
+                    <Button onClick={ handleBuyScripts10 } variant="success" disabled={ scriptsButton10Enabled }>Buy x10</Button>
                   </div>
                 </Card.Body>
               </Card>
