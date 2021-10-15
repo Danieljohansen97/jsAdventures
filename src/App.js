@@ -1,5 +1,5 @@
 // React imports
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // Styles
 import "./App.css";
 // Bootstrap
@@ -13,57 +13,86 @@ import Functions from "./functions/Functions"
 
 function App() {
   const [money, setMoney] = useState(0);
-  const [clickMultiplier, setClickMultiplier] = useState(1);
-  const [CMPrice, setCMPrice] = useState(10)
+  const [relateTickets, setRelateTickets] = useState(1);
+  const [relateTicketsPrice, setRelateTicketsPrice] = useState(10)
+  const [scripts, setScripts] = useState(0);
+  const [scriptsPrice, setScriptsPrice] = useState(1000)
+
+  const [CM1ButtonEnabled, setCM1ButtonEnabled] = useState(false)
+  const [CM10ButtonEnabled, setCM10ButtonEnabled] = useState(false)
 
   const handleClick = () => {
-    setMoney(money + 1 * clickMultiplier);
+    setMoney(money + 1 * relateTickets);
   };
 
-  const handleBuyClickMultiplier = () => {
-    if (money >= CMPrice) {
-      setClickMultiplier(clickMultiplier * 1.5)
-      setMoney(money - CMPrice)
-      setCMPrice(CMPrice * 1.1)
+  // Buy upgrades
+  const handleBuyRelateTickets = () => {
+    if (money >= relateTicketsPrice) {
+      setRelateTickets(relateTickets * 1.05)
+      setMoney(money - relateTicketsPrice)
+      setRelateTicketsPrice(relateTicketsPrice * 1.15)
+    } else {
+      alert("Not enough money!")
+    }
+  }
+  const handleBuyRelateTickets10 = () => {
+    if (money >= (relateTicketsPrice * 10)) {
+      setRelateTickets(relateTickets * 10.5)
+      setMoney(money - (relateTicketsPrice * 10))
+      setRelateTicketsPrice(relateTicketsPrice * 11.5)
     } else {
       alert("Not enough money!")
     }
   }
 
+  // 
+
+  // useEffect that disables / enables purchase buttons
+  useEffect(() => {
+    // Click multiplier Buttons
+    // x1
+    money >= relateTicketsPrice ? setCM1ButtonEnabled(false) : setCM1ButtonEnabled(true)
+    // x10
+    money >= (relateTicketsPrice * 10) ? setCM10ButtonEnabled(false) : setCM10ButtonEnabled(true)
+
+
+
+  }, [money, relateTicketsPrice])
+
   return (
     <div className="App">
       <Container>
         <Row>
-          <h2>Money: {Math.round((money + Number.EPSILON) * 100) / 100}</h2>
+          <h2>Money: {Math.round((money + Number.EPSILON) * 100) / 100}$</h2>
         </Row>
         <Row>
           <Col></Col>
           <Col>
             <Button onClick={handleClick} variant="primary" size="lg">
-              Click me
+              Resolve an incident
             </Button>
           </Col>
           <Col>
             <Row>
               <Card>
                 <Card.Header>
-                  <Card.Title>Click Multiplier</Card.Title>
+                  <Card.Title>Relate tickets</Card.Title>
                 </Card.Header>
                 <Card.Body>
-                  <Card.Text>Increase money per click</Card.Text>
-                  <p>{Math.round(CMPrice)}</p>
+                  <Card.Text>Relate tickets so you can resolve incidents faster</Card.Text>
+                  <p>Price: {Math.round(relateTicketsPrice)}$</p>
                   <div className="d-grid gap-2">
-                    <Button onClick={ handleBuyClickMultiplier } variant="success">Buy x1</Button>
-                    <Button onClick={ () => Functions.test2() } variant="success">Buy x10</Button>
+                    <Button onClick={ handleBuyRelateTickets } variant="success" disabled={CM1ButtonEnabled}>Buy x1</Button>
+                    <Button onClick={ handleBuyRelateTickets10 } variant="success" disabled={CM10ButtonEnabled}>Buy x10</Button>
                   </div>
                 </Card.Body>
               </Card>
               <Card>
                 <Card.Header>
-                  <Card.Title>Auto Clicker</Card.Title>
+                  <Card.Title>Create Script</Card.Title>
                 </Card.Header>
                 <Card.Body>
-                  <Card.Text>Increase money per click</Card.Text>
+                  <Card.Text>Create a script to resolve incidents where the alarm autoclears</Card.Text>
                   <div className="d-grid gap-2">
                     <Button onClick={ () => Functions.test() } variant="success">Buy x1</Button>
                     <Button onClick={ () => Functions.test2() } variant="success">Buy x10</Button>
